@@ -11,3 +11,56 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+:root {
+  --primary-color: #017785; 
+  --secondary-color: #F86534;
+  --black-color: #0000;
+  --white-color: #ffff;
+  --error-color: #E14856;
+  --gray-color: #D2D1D1;
+  --secondary-light-color: #F8DEE1;
+  --black-50-color: #505050;
+  --warning-primary-color: #FC9C2E;
+  --warning-secondary-color: #FEF7EA;
+}
+
+@font-face {
+  font-family: 'MyFont_Black';
+  src: local('MyFont_Black'), url(./fonts/PelakFA-Black.ttf) format('woff');
+}
+
+@font-face {
+  font-family: 'MyFont_Bold';
+  src: local('MyFont_Bold'), url(./fonts/PelakFA-Bold.ttf) format('woff');
+}
+
+@font-face {
+  font-family: 'MyFont_ExtraBold';
+  src: local('MyFont_ExtraBold'), url(./fonts/PelakFA-ExtraBold.ttf) format('woff');
+}
+
+@font-face {
+  font-family: 'MyFont_light';
+  src: local('MyFont_light'), url(./fonts/PelakFA-light.ttf) format('woff');
+}
+
+@font-face {
+  font-family: 'MyFont_Medium';
+  src: local('MyFont_Medium'), url(./fonts/PelakFA-Medium.ttf) format('woff');
+}
+
+@font-face {
+  font-family: 'MyFont_Regular';
+  src: local('MyFont_Regular'), url(./fonts/PelakFA-Regular.ttf) format('woff');
+}
+
+@font-face {
+  font-family: 'MyFont_SemiBold';
+  src: local('MyFont_SemiBold'), url(./fonts/PelakFA-SemiBold.ttf) format('woff');
+}
+
+@font-face {
+  font-family: 'MyFont_Thin';
+  src: local('MyFont_Thin'), url(./fonts/PelakFA-Thin.ttf) format('woff');
+}

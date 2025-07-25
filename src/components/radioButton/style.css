@@ -1,0 +1,35 @@
+.radio-container {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: center;
+  width: 295px;
+}
+
+.radio-container span {
+  font-family: "MyFont_Medium";
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 24px;
+  text-align: right;
+}
+
+.radio-container label {
+  font-family: "MyFont_Medium";
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 24px;
+  text-align: right;
+}
+
+.radio-input-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+
+.radio-input-container input[type="radio"] {
+  accent-color: var(--secondary-color); /* Or any other color, e.g., #FF0000 for red */
+}

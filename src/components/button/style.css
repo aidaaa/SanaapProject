@@ -1,0 +1,14 @@
+.btn_container {
+    width: 295px;
+    min-height: 48px;
+    border-radius: 10px;
+    background-color: var(--primary-color);
+    border: unset;
+    color: var(--white-color);
+    font-family: "MyFont_Medium";;
+}
+
+.btn_container:hover {
+    cursor: pointer;
+    opacity: 0.8 !important;
+}

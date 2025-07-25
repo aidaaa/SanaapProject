@@ -1,0 +1,28 @@
+.error_container {
+  display: flex;
+  width: 327px;
+  height: 30px;
+  top: 24px;
+  position: absolute;
+  opacity: 1;
+  border-radius: 10px;
+  gap: 8px;
+  padding: 16px;
+  flex-direction: row-reverse;
+}
+
+.error_container img {
+  width: 28px;
+  height: 28px;
+}
+
+.error_container span {
+  font-family: "MyFont_Medium";
+  color: var(--black-50-color);
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 12px;
+  line-height: 28px;
+  letter-spacing: 0%;
+  text-align: right;
+}
