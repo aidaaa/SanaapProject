@@ -303,7 +303,6 @@ const UserPersonalDetailsData = (props: UserPersonalDetailsDataProps) => {
             }}
             label={"استان"}
             placeholder="استان را انتخاب کنید"
-            // disable={true}
           />
 
           <MyDropDown

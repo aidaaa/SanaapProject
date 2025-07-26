@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import "./style.css";
 import AsyncSelect from "react-select/async";
 import { useField, useFormikContext } from "formik";
 import { SelectOption } from "../../types";
 import api from "../../api";
-
-// interface SelectOptionType
+import { debounce } from "lodash";
 
 interface MyAsyncSelectProps {
   handleChange?: (value: SelectOption) => void;
@@ -14,7 +13,7 @@ interface MyAsyncSelectProps {
   placeholder: string;
   name: string;
   provinceId: number;
-  url: string
+  url: string;
 }
 
 const MyAsyncSelect = (props: MyAsyncSelectProps) => {
@@ -25,7 +24,7 @@ const MyAsyncSelect = (props: MyAsyncSelectProps) => {
     disable = false,
     name,
     provinceId,
-    url
+    url,
   } = props;
 
   const [field, meta, helpers] = useField(name);
@@ -40,22 +39,19 @@ const MyAsyncSelect = (props: MyAsyncSelectProps) => {
     if (handleChange) handleChange(e);
   };
 
-  const loadOptions = (inputValue: any, callback: any) => {
+  const fetchOptions = (inputValue: any, callback: any) => {
     if (disable || !inputValue) {
       callback([]);
       return;
     }
     api
-      .get(
-        url,
-        {
-          params: {
-            name: 73,
-            insurance: inputValue,
-            province: provinceId,
-          },
-        }
-      )
+      .get(url, {
+        params: {
+          name: 73,
+          insurance: inputValue,
+          province: provinceId,
+        },
+      })
       .then((response) => {
         const options: SelectOption[] = [];
         response.data.response.map((el: any) => {
@@ -65,6 +61,8 @@ const MyAsyncSelect = (props: MyAsyncSelectProps) => {
         callback(options);
       });
   };
+
+  const debouncedLoadOtions = useMemo(() => debounce(fetchOptions, 500), [provinceId]);
 
   const customStyles = {
     container: (baseStyles: any, state: any) => ({
@@ -128,7 +126,7 @@ const MyAsyncSelect = (props: MyAsyncSelectProps) => {
           },
         })}
         cacheOptions
-        loadOptions={loadOptions}
+        loadOptions={debouncedLoadOtions}
         defaultOptions
         onChange={(selectedOption) => onChange(selectedOption)}
         placeholder={placeholder}
