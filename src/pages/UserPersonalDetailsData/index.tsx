@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import "./style.css";
 import MyTextInput from "../../components/textInput";
 import MyButton from "../../components/button";
@@ -14,7 +14,7 @@ import {
   SelectOption,
   VerificationSighUp,
 } from "../../types";
-import ErrorAlert, { AlertType } from "../../components/error_alert";
+import ErrorAlert, { AlertType } from "../../components/errorAlert";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import DoneIcone from "../../images/done.svg";
@@ -22,6 +22,7 @@ import MyRadioButton from "../../components/radioButton";
 import MyTextArea from "../../components/textArea";
 import { CircularProgress } from "@mui/material";
 import api from "../../api";
+import MyAsyncSelect from "../../components/AsyncSelect";
 
 interface UserPersonalDetailsDataProps {
   onSuccess: () => void;
@@ -30,6 +31,12 @@ interface UserPersonalDetailsDataProps {
 enum AgencyType {
   Real,
   Legal,
+}
+
+enum ErrorType {
+  None,
+  ValidationSignUp,
+  CodeValidation,
 }
 
 interface VerificationSignUpInput {
@@ -56,20 +63,23 @@ interface FetchCountiesInput {
 }
 
 const verificationSignup = async (input: VerificationSignUpInput) => {
-  const response = await api.post("/api/v2/app/DEY/agent/verification/signup", {
-    address: input.address,
-    agency_type: input.agency_type,
-    agent_code: input.agent_code,
-    city_code: input.city_code,
-    county: input.county,
-    first_name: input.first_name,
-    insurance_branch: input.insurance_branch,
-    last_name: input.last_name,
-    phone: input.phone,
-    phone_number: input.phone_number,
-    province: input.province,
-    Name: input.Name,
-  });
+  const response = await api.post(
+    "/api/v2/app/DEY/agent/verification/signup/",
+    {
+      address: input.address,
+      agency_type: input.agency_type === 0 ? "real" : "legal",
+      agent_code: input.agent_code,
+      city_code: input.city_code,
+      county: input.county,
+      first_name: input.first_name,
+      insurance_branch: input.insurance_branch,
+      last_name: input.last_name,
+      phone: input.phone,
+      phone_number: input.phone_number,
+      province: input.province,
+      Name: input.Name,
+    }
+  );
   return response.data;
 };
 
@@ -89,23 +99,9 @@ const fetchProvince = async () => {
 };
 
 const fetchCounties = async (input: FetchCountiesInput) => {
-  const response = await api.get(`/base/counties_wop`, {
+  const response = await api.get(`/base/counties_wop/`, {
     params: { province: input.provinceId },
   });
-  return response.data;
-};
-
-const fetchInsuranceBranch = async (input: FetchCountiesInput) => {
-  const response = await api.get(
-    "/api/v2/app/selection_item/insurance_branch/wop_list/",
-    {
-      params: {
-        name: 73,
-        insurance: "DEY",
-        province: input.provinceId,
-      },
-    }
-  );
   return response.data;
 };
 
@@ -113,14 +109,13 @@ const UserPersonalDetailsData = (props: UserPersonalDetailsDataProps) => {
   const { onSuccess } = props;
   // const queryClient = useQueryClient();
 
-  const [showWarningMsg, setShowWarningMsg] = useState<boolean>(false);
+  const [showWarningMsg, setShowWarningMsg] = useState<ErrorType>(
+    ErrorType.None
+  );
   const [agentCodeValidate, setAgentCodeValidate] = useState<boolean>(false);
 
   const [provinceOption, setProvinceOption] = useState<SelectOption[]>([]);
   const [countiyOption, setCountiyOption] = useState<SelectOption[]>([]);
-  const [insuranceBranchOption, setInsuranceBranchOption] = useState<
-    SelectOption[]
-  >([]);
 
   const [selectedProvinceId, setSelectedProvinceId] = useState<number>(-1);
   const [agencyType, setAgencyType] = useState<AgencyType>();
@@ -142,8 +137,8 @@ const UserPersonalDetailsData = (props: UserPersonalDetailsDataProps) => {
       setAgentCodeValidate(true);
     },
     onError: function (error: AxiosError<MyError>) {
-      setAgentCodeValidate(false)
-      setShowWarningMsg(true);
+      setAgentCodeValidate(false);
+      setShowWarningMsg(ErrorType.CodeValidation);
     },
   });
 
@@ -158,7 +153,7 @@ const UserPersonalDetailsData = (props: UserPersonalDetailsDataProps) => {
       onSuccess();
     },
     onError: function (error: AxiosError<MyError>) {
-      setShowWarningMsg(true);
+      setShowWarningMsg(ErrorType.ValidationSignUp);
     },
   });
 
@@ -171,15 +166,6 @@ const UserPersonalDetailsData = (props: UserPersonalDetailsDataProps) => {
   const fetchCountyQuery = useQuery<ProvinceData[], AxiosError<MyError>>({
     queryKey: ["county"],
     queryFn: () => fetchCounties({ provinceId: selectedProvinceId }),
-    enabled: false,
-  });
-
-  const fetchInsuranceBranchQuery = useQuery<
-    ProvinceData[],
-    AxiosError<MyError>
-  >({
-    queryKey: ["insurance"],
-    queryFn: () => fetchInsuranceBranch({ provinceId: selectedProvinceId }),
     enabled: false,
   });
 
@@ -201,8 +187,6 @@ const UserPersonalDetailsData = (props: UserPersonalDetailsDataProps) => {
   useEffect(() => {
     if (selectedProvinceId !== -1) {
       fetchCountyQuery.refetch();
-      // fetchInsuranceBranchQuery.refetch();
-      // queryClient.invalidateQueries({ queryKey: ['county', 'insurance'] })
     }
   }, [selectedProvinceId]);
 
@@ -218,21 +202,14 @@ const UserPersonalDetailsData = (props: UserPersonalDetailsDataProps) => {
   }, [fetchCountyQuery.data]);
 
   useEffect(() => {
-    if (fetchInsuranceBranchQuery.data) {
-      const options: SelectOption[] = [];
-      fetchInsuranceBranchQuery.data.map((el) => {
-        const opt: SelectOption = { value: el.id, label: el.name };
-        options.push(opt);
-      });
-      setInsuranceBranchOption([...options]);
-    }
-  }, [fetchInsuranceBranchQuery.data]);
-
-  useEffect(() => {
     setTimeout(() => {
-      setShowWarningMsg(false);
+      setShowWarningMsg(ErrorType.None);
     }, 3000);
   }, [agentCodeValidationMutation.isError, verificationSignupMutation.isError]);
+
+  const agenctTypeValueScheme: AgencyType[] = Object.values(
+    AgencyType
+  ) as AgencyType[];
 
   return (
     <>
@@ -245,12 +222,15 @@ const UserPersonalDetailsData = (props: UserPersonalDetailsDataProps) => {
           }}
         />
       )}
-      {showWarningMsg && (
+      {showWarningMsg !== ErrorType.None && (
         <ErrorAlert
           type={AlertType.Error}
           text={
-            agentCodeValidationMutation.error?.response?.data?.error_details
-              ?.fa_details
+            showWarningMsg === ErrorType.CodeValidation
+              ? agentCodeValidationMutation.error?.response?.data?.error_details
+                  ?.fa_details
+              : verificationSignupMutation.error?.response?.data?.error_details
+                  ?.fa_details
           }
         />
       )}
@@ -267,11 +247,19 @@ const UserPersonalDetailsData = (props: UserPersonalDetailsDataProps) => {
         }}
         validationSchema={Yup.object({
           agentCode: Yup.string().required(),
-          provinces: Yup.string().required(),
+          provinces: Yup.number().required(),
           address: Yup.string().required(),
-          // counties: Yup.string().required(),
-          // insurance_branch: Yup.string().required(),
+          counties: Yup.number().required(),
+          // insurance_branch: Yup.object().required(),
           phone: Yup.string().required(),
+          agancyType: Yup.mixed<AgencyType>()
+            .oneOf(agenctTypeValueScheme)
+            .required(),
+          agancyName: Yup.string().when("agancyType", {
+            is: AgencyType.Legal,
+            then: (schema) => schema.required(),
+            otherwise: (scheme) => scheme.notRequired(),
+          }),
         })}
         onSubmit={(values) => {
           console.log(values);
@@ -280,9 +268,9 @@ const UserPersonalDetailsData = (props: UserPersonalDetailsDataProps) => {
             agency_type: values.agancyType,
             agent_code: values.agentCode,
             city_code: 0,
-            county: 0,
+            county: values.counties,
             first_name: userData.firstName,
-            insurance_branch: 0,
+            insurance_branch: values.insurance_branch,
             last_name: userData.lastName,
             phone: values.phone,
             phone_number: userData.phoneNumber,
@@ -326,12 +314,13 @@ const UserPersonalDetailsData = (props: UserPersonalDetailsDataProps) => {
             disable={countiyOption.length === 0}
           />
 
-          <MyDropDown
+          <MyAsyncSelect
             name="insurance_branch"
-            options={insuranceBranchOption}
             label={"شعبه بیمه"}
             placeholder="شعبه بیمه را انتخاب کنید"
-            disable={insuranceBranchOption.length === 0}
+            disable={selectedProvinceId === -1}
+            provinceId={selectedProvinceId}
+            url="/api/v2/app/selection_item/insurance_branch/wop_list/"
           />
 
           <MyTextArea
