@@ -17,7 +17,7 @@ enum UserValidateStep {
 
 const MainPage = () => {
   const [validationStep, setValidationStep] = useState<UserValidateStep>(
-    UserValidateStep.PersonalDetailsData
+    UserValidateStep.PhoneNumber
   );
 
   const validatePhoneSuccess = useCallback((step: UserValidateStep) => {
