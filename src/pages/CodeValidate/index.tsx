@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./style.css";
-import MyTextInput from "../../components/textInput";
-import MyButton from "../../components/button";
+import MyTextInput from "../../components/TextInput";
+import MyButton from "../../components/Button";
 import { AxiosError } from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { MyData, MyError } from "../../types";
-import ErrorAlert, { AlertType } from "../../components/errorAlert";
+import ErrorAlert, { AlertType } from "../../components/ErrorAlert";
 import { CircularProgress } from "@mui/material";
 import { Form, Formik, useField, useFormikContext } from "formik";
 import * as Yup from "yup";

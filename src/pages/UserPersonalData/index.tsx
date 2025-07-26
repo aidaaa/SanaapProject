@@ -1,7 +1,7 @@
 import React from "react";
 import "./style.css";
-import MyTextInput from "../../components/textInput";
-import MyButton from "../../components/button";
+import MyTextInput from "../../components/TextInput";
+import MyButton from "../../components/Button";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useSelector, useDispatch } from "react-redux";

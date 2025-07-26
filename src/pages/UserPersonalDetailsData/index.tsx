@@ -1,10 +1,10 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import "./style.css";
-import MyTextInput from "../../components/textInput";
-import MyButton from "../../components/button";
+import MyTextInput from "../../components/TextInput";
+import MyButton from "../../components/Button";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import MyDropDown from "../../components/dropDownMenu";
+import MyDropDown from "../../components/DropDownMenu";
 import { AxiosError } from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -14,12 +14,12 @@ import {
   SelectOption,
   VerificationSighUp,
 } from "../../types";
-import ErrorAlert, { AlertType } from "../../components/errorAlert";
+import ErrorAlert, { AlertType } from "../../components/ErrorAlert";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import DoneIcone from "../../images/done.svg";
-import MyRadioButton from "../../components/radioButton";
-import MyTextArea from "../../components/textArea";
+import MyRadioButton from "../../components/RadioButton";
+import MyTextArea from "../../components/TextArea";
 import { CircularProgress } from "@mui/material";
 import api from "../../api";
 import MyAsyncSelect from "../../components/AsyncSelect";

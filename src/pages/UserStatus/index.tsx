@@ -4,7 +4,7 @@ import { AxiosError } from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { MyError } from "../../types";
 import api from "../../api";
-import MyButton from "../../components/button";
+import MyButton from "../../components/Button";
 import PendingIcon from "../../images/pending.svg";
 
 const fetchUserStatus = async () => {
