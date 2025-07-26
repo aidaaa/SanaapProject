@@ -16,7 +16,7 @@ const UserStatus = () => {
   const fetchProvinceQuery = useQuery<any[], AxiosError<MyError>>({
     queryKey: ["userStatus"],
     queryFn: fetchUserStatus,
-    enabled: false,
+    enabled: true,
   });
 
   return (
