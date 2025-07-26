@@ -1,0 +1,28 @@
+.drop_container {
+  width: 295px;
+  height: 72px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: end;
+  font-family: "MyFont_Medium";
+  /* margin-top: 300px; */
+}
+
+.drop_container span {
+  font-family: "MyFont_Medium";
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 24px;
+  text-align: right;
+}
+
+.drop_select {
+  width: 100%;
+  text-align: right;
+  font-size: 10px;
+}
+
+.drop_select:hover {
+  border-color: var(--primary-color);
+}
