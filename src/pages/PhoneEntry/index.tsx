@@ -5,7 +5,7 @@ import MyButton from "../../components/button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { CircularProgress } from "@mui/material";
-import ErrorAlert, { AlertType } from "../../components/error_alert";
+import ErrorAlert, { AlertType } from "../../components/errorAlert";
 import { MyData, MyError } from "../../types";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";

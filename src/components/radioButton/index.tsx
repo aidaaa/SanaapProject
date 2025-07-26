@@ -11,11 +11,13 @@ interface MyRadioButtonProps {
 
 const MyRadioButton = (props: MyRadioButtonProps) => {
   const { radioOptions, onChange, name } = props;
-  const [field] = useField(name);
+  const [field, meta, helpers] = useField(name);
+  const { setValue, setTouched } = helpers;
 
   const [selectedValue, setSelectedValue] = useState<number>(-1);
 
   const handleChange = (value: number) => {
+    setValue(value)
     setSelectedValue(value);
     onChange(value);
   };
