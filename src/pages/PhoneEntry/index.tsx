@@ -93,23 +93,16 @@ const PhoneEntry = (props: PhoneEntryProps) => {
       >
         <Form>
           <MyTextInput
-            type="text"
+            type="number"
             name="phone"
             placeholder="تلفن همراه "
             label="تلفن همراه "
             maxLength={11}
-            onChange={function (value: string): void {
-              //   setPhoneNumber(value);
-            }}
           />
 
           <MyButton
             style={{ marginTop: "40px" }}
             text="ادامه"
-            // disable={phoneNumber === ""}
-            onClick={function (): void {
-              //   mutate();
-            }}
           />
         </Form>
       </Formik>

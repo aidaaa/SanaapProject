@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import "./style.css";
 import MyTextInput from "../../components/TextInput";
 import MyButton from "../../components/Button";
@@ -21,6 +27,7 @@ interface CodeValidateProps {
 interface CodeInputProps {
   name: string;
   index: number;
+  changeFocus: (index: number) => void;
 }
 
 interface CodeInput {
@@ -39,31 +46,21 @@ const codeValidation = async (input: CodeInput) => {
   return response.data;
 };
 
-const CodeInput = (props: CodeInputProps) => {
-  const { name, index } = props;
+const CodeInput = forwardRef<HTMLInputElement, CodeInputProps>((props, ref) => {
+  const { name, index, changeFocus } = props;
   const [field, meta] = useField(name);
   const { submitCount } = useFormikContext<any>();
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const showError = submitCount > 0 && !!meta.error;
 
   const handleChange = (value: string) => {
-    if (!/^\d?$/.test(value)) return;
-
-    // field.onChange(e);
-
-    // move focus to next input
-    if (
-      value &&
-      inputRef.current?.nextElementSibling instanceof HTMLInputElement
-    ) {
-      inputRef.current.nextElementSibling.focus();
-    }
+    changeFocus(index);
   };
   return (
     <MyTextInput
       {...field}
-      ref={inputRef}
+      name={name}
+      ref={ref}
       type="number"
       maxLength={1}
       onChange={handleChange}
@@ -73,13 +70,14 @@ const CodeInput = (props: CodeInputProps) => {
       inputStyle={{ textAlign: "center" }}
     />
   );
-};
+});
 
 const CodeValidate = (props: CodeValidateProps) => {
   const { onSuccess } = props;
   const phoneNumber = useSelector(
     (state: RootState) => state.userData.phoneNumber
   );
+  const inputRef = useRef<Array<HTMLInputElement | null>>([]);
 
   const [showError, setShowError] = useState<boolean>(false);
 
@@ -102,6 +100,10 @@ const CodeValidate = (props: CodeValidateProps) => {
       setShowError(false);
     }, 3000);
   }, [isError]);
+
+  const onFocusChange = (index: number) => {
+    inputRef.current[index + 1]?.focus();
+  };
 
   return (
     <div className="code-container">
@@ -132,6 +134,7 @@ const CodeValidate = (props: CodeValidateProps) => {
           otp3: "",
           otp4: "",
           otp5: "",
+          firstName: "",
         }}
         validationSchema={Yup.object({
           otp1: Yup.string().required(),
@@ -149,17 +152,49 @@ const CodeValidate = (props: CodeValidateProps) => {
       >
         <Form>
           <div className="code-form">
-            <CodeInput name="otp1" index={0} />
-            <CodeInput name="otp2" index={1} />
-            <CodeInput name="otp3" index={2} />
-            <CodeInput name="otp4" index={3} />
-            <CodeInput name="otp5" index={4} />
+            <CodeInput
+              name="otp1"
+              index={0}
+              ref={(el: HTMLInputElement | null) => {
+                inputRef.current[0] = el;
+              }}
+              changeFocus={onFocusChange}
+            />
+            <CodeInput
+              name="otp2"
+              index={1}
+              ref={(el: HTMLInputElement | null) => {
+                inputRef.current[1] = el;
+              }}
+              changeFocus={onFocusChange}
+            />
+            <CodeInput
+              name="otp3"
+              index={2}
+              ref={(el: HTMLInputElement | null) => {
+                inputRef.current[2] = el;
+              }}
+              changeFocus={onFocusChange}
+            />
+            <CodeInput
+              name="otp4"
+              index={3}
+              ref={(el: HTMLInputElement | null) => {
+                inputRef.current[3] = el;
+              }}
+              changeFocus={onFocusChange}
+            />
+            <CodeInput
+              name="otp5"
+              index={4}
+              ref={(el: HTMLInputElement | null) => {
+                inputRef.current[4] = el;
+              }}
+              changeFocus={onFocusChange}
+            />
           </div>
 
-          <MyButton
-            style={{ marginTop: "40px" }}
-            text="ادامه"
-          />
+          <MyButton style={{ marginTop: "40px" }} text="ادامه" />
         </Form>
       </Formik>
     </div>

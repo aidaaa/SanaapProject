@@ -33,8 +33,13 @@ const MyTextInput = (props: MyTextInputProps) => {
   const showError = submitCount > 0 && !!meta.error;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFieldValue(name, e.target.value, true);
-    if(onChange)onChange(e.target.value);
+    if (maxLength && e.target.value.length <= maxLength) {
+      setFieldValue(name, e.target.value, true);
+      if (onChange) onChange(e.target.value);
+    } else if (!maxLength) {
+      setFieldValue(name, e.target.value, true);
+      if (onChange) onChange(e.target.value);
+    }
   };
 
   return (
