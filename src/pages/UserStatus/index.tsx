@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./style.css";
 import { AxiosError } from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -13,10 +13,11 @@ const fetchUserStatus = async () => {
 };
 
 const UserStatus = () => {
-  const fetchProvinceQuery = useQuery<any[], AxiosError<MyError>>({
+  const fetchProvinceQuery = useQuery<any, AxiosError<MyError>>({
     queryKey: ["userStatus"],
     queryFn: fetchUserStatus,
     enabled: true,
+    retry: false,
   });
 
   return (
@@ -26,12 +27,11 @@ const UserStatus = () => {
         <span>
           نماینده محترم؛
           <br />
-          درخواست ثبت نام شما در حال بررسی است، در صورت تأیید اطلاعات، اپلیکیشن
-          مورد نظر فعال خواهد شد.
+          {fetchProvinceQuery?.data?.registration_status}
+          {/* درخواست ثبت نام شما در حال بررسی است، در صورت تأیید اطلاعات، اپلیکیشن
+          مورد نظر فعال خواهد شد. */}
         </span>
-        <MyButton
-          text="ورود با حساب کاربری دیگر"
-        />
+        <MyButton text="ورود با حساب کاربری دیگر" />
       </div>
     </div>
   );
