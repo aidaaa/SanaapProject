@@ -31,11 +31,12 @@ const MyDropDown = (props: MyDropDownProps) => {
   const { submitCount } = useFormikContext<any>();
   const { setValue, setTouched } = helpers;
 
-  const showError = !!meta.error && (meta.touched || submitCount > 0);
+  // const showError = !!meta.error && (meta.touched || submitCount > 0);
+    const showError = submitCount > 0 && !!meta.error;
   const valid = !meta.error && (meta.touched || submitCount > 0);
 
   const onChange = (e: any) => {
-    setValue(e.value);
+    setValue(e);
     if(handleChange)handleChange(e);
   };
 

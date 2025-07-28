@@ -44,13 +44,13 @@ interface VerificationSignUpInput {
   agency_type: AgencyType;
   agent_code: string;
   city_code: number;
-  county: number;
+  county: any;
   first_name: string;
-  insurance_branch: number;
+  insurance_branch: any;
   last_name: string;
   phone: string;
   phone_number: string;
-  province: number;
+  province: any;
   Name: string;
 }
 
@@ -70,13 +70,13 @@ const verificationSignup = async (input: VerificationSignUpInput) => {
       agency_type: input.agency_type === 0 ? "real" : "legal",
       agent_code: input.agent_code,
       city_code: input.city_code,
-      county: input.county,
+      county: input.county.value,
       first_name: input.first_name,
-      insurance_branch: input.insurance_branch,
+      insurance_branch: input.insurance_branch.value,
       last_name: input.last_name,
       phone: input.phone,
       phone_number: input.phone_number,
-      province: input.province,
+      province: input.province.value,
       Name: input.Name,
     }
   );
@@ -238,20 +238,20 @@ const UserPersonalDetailsData = (props: UserPersonalDetailsDataProps) => {
         initialValues={{
           agentCode: "",
           address: "",
-          provinces: 0,
-          counties: 0,
-          insurance_branch: 0,
+          provinces: 0,//{ label: "", value: -1 },
+          counties: 0,//{ label: "", value: -1 },
+          insurance_branch: 0,//{ label: "", value: -1 },
           phone: "",
           agancyType: AgencyType.Legal,
           agancyName: "",
         }}
         validationSchema={Yup.object({
           agentCode: Yup.string().required(),
-          provinces: Yup.number().required(),
+          provinces: Yup.object().required(),
           address: Yup.string().required(),
-          counties: Yup.number().required(),
-          // insurance_branch: Yup.object().required(),
+          counties: Yup.object().required(),
           phone: Yup.string().required(),
+          insurance_branch: Yup.object().required(),
           agancyType: Yup.mixed<AgencyType>()
             .oneOf(agenctTypeValueScheme)
             .required(),
