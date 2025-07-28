@@ -47,8 +47,8 @@ const MyAsyncSelect = (props: MyAsyncSelectProps) => {
     api
       .get(url, {
         params: {
-          name: 73,
-          insurance: inputValue,
+          name: inputValue,
+          insurance: "DEY",
           province: provinceId,
         },
       })
